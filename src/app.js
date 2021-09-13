@@ -7,15 +7,15 @@ const app = express();
 const userRoutes = require('./routes/userRoutes');
 
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
-app.use(morgan('dev'))
+app.use(express.urlencoded({ extended: false }));
+app.use(morgan('dev'));
 
 // routes
 app.use('/api/users', userRoutes);
 
 // 404 endpoint
 app.all('*', (req, res) => {
-  res.status(404).json({message: `${req.originalUrl} not found!`});
+  res.status(404).json({ message: `${req.originalUrl} not found!` });
 });
 
 const port = process.env.PORT || 5000;
