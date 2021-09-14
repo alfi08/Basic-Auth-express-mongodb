@@ -6,6 +6,8 @@ const helmet = require('helmet');
 const cors = require('cors');
 const xss = require('xss-clean');
 
+const ErrorHandler = require('./utils/ErrorHandler');
+
 require('dotenv').config();
 // require('express-async-errors');
 
@@ -42,3 +44,6 @@ app.use('/api/users', userRoutes);
 app.all('*', (req, res) => {
   res.status(404).json({ message: `${req.originalUrl} not found!` });
 });
+
+// error handler
+app.use(ErrorHandler);
