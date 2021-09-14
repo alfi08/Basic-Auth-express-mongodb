@@ -662,6 +662,11 @@ express-async-errors@^3.1.1:
   resolved "https://registry.npmjs.org/express-async-errors/-/express-async-errors-3.1.1.tgz#6053236d61d21ddef4892d6bd1d736889fc9da41"
   integrity sha512-h6aK1da4tpqWSbyCa3FxB/V6Ehd4EEB15zyQq9qe75OZBp0krinNKuH4rAY+S/U/2I36vdLAUFSjQJ+TFmODng==
 
+express-mongo-sanitize@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npmjs.org/express-mongo-sanitize/-/express-mongo-sanitize-2.1.0.tgz#a8c647787c25ded6e97b5e864d113e7687c5d471"
+  integrity sha512-ELGeH/Tx+kJGn3klCzSmOewfN1ezJQrkqzq83dl/K3xhd5PUbvLtiD5CiuYRmQfoZPL4rUEVjANf/YjE2BpTWQ==
+
 express@^4.17.1:
   version "4.17.1"
   resolved "https://registry.npmjs.org/express/-/express-4.17.1.tgz"
@@ -1895,6 +1900,18 @@ wrappy@1:
   version "1.0.2"
   resolved "https://registry.npmjs.org/wrappy/-/wrappy-1.0.2.tgz"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
+
+xss-clean@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.npmjs.org/xss-clean/-/xss-clean-0.1.1.tgz#d3ba684d85ccd52054963d01ad6ab36d662db1a5"
+  integrity sha1-07poTYXM1SBUlj0BrWqzbWYtsaU=
+  dependencies:
+    xss-filters "1.2.6"
+
+xss-filters@1.2.6:
+  version "1.2.6"
+  resolved "https://registry.npmjs.org/xss-filters/-/xss-filters-1.2.6.tgz#68b39089cb1dff8b9dbc889484839b2f507f5c55"
+  integrity sha1-aLOQicsd/4udvIiUhIObL1B/XFU=
 
 yallist@^4.0.0:
   version "4.0.0"
