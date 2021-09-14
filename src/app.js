@@ -9,7 +9,7 @@ const xss = require('xss-clean');
 const ErrorHandler = require('./utils/ErrorHandler');
 
 require('dotenv').config();
-// require('express-async-errors');
+require('express-async-errors');
 
 const app = express();
 const port = process.env.PORT || 5000;

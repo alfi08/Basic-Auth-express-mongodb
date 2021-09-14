@@ -1,8 +1,8 @@
 const User = require('../models/UserModel');
-const CatchAsync = require('../utils/CatchAsync');
 const AppError = require('../utils/AppError');
+const { generateToken } = require('../utils/tokenManager');
 
-exports.signup = CatchAsync(async (req, res, next) => {
+exports.signup = async (req, res, next) => {
   const { name, username, email, password, passwordConfirm } = req.body;
 
   if (password !== passwordConfirm)
@@ -19,12 +19,13 @@ exports.signup = CatchAsync(async (req, res, next) => {
   res.json({
     status: 'success',
     data: {
+      token: generateToken(newUser._id),
       username: newUser.username,
     },
   });
-});
+};
 
-exports.signin = CatchAsync(async (req, res) => {
+exports.signin = async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
   
@@ -33,18 +34,15 @@ exports.signin = CatchAsync(async (req, res) => {
     res.json({
       status: 'susccess',
       data: {
+        token: generateToken(user._id),
         name: user.name,
         username: user.username,
         email: user.email,
-      }
+      },
     });
   }else{
     throw new AppError('Invalid email or password', 400);
   }
-});
-
-exports.logout = (req, res) => {
-  res.json({ message: 'logout endpoint' });
 };
 
 exports.forgotPassword = (req, res) => {
