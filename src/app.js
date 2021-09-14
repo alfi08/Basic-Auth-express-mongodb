@@ -1,11 +1,15 @@
-require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 
+require('dotenv').config();
+// require('express-async-errors');
+
 const app = express();
 
+// routes
 const userRoutes = require('./routes/userRoutes');
 
+// middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan('dev'));
