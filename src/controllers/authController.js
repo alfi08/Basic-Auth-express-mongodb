@@ -1,8 +1,10 @@
 const User = require('../models/UserModel');
-const AppError = require('../utils/AppError');
+const AppError = require('../utils/exception/AppError');
+const Email = require('../utils/email/Email');
+const bcrypt = require('bcryptjs');
 const { generateToken } = require('../utils/tokenManager');
 
-exports.signup = async (req, res, next) => {
+exports.signup = async (req, res) => {
   const { name, username, email, password, passwordConfirm } = req.body;
 
   if (password !== passwordConfirm)
@@ -16,6 +18,9 @@ exports.signup = async (req, res, next) => {
     passwordConfirm,
   });
 
+  // send welcome email
+  await new Email(newUser).sendWelcome();
+  
   res.json({
     status: 'success',
     data: {
@@ -45,10 +50,55 @@ exports.signin = async (req, res) => {
   }
 };
 
-exports.forgotPassword = (req, res) => {
-  res.json({ message: 'forgotPassword endpoint' });
+exports.forgotPassword = async (req, res) => {
+  const {email} = req.body;
+  const user = await User.findOne({email});
+  
+  if(!user){
+    throw new AppError('Email is not registered in our data', 404);
+  }
+
+  const resetToken = user.createPasswordResetToken();
+  await user.save({validateBeforeSave: false});
+  await new Email(user);
+  res.json({status: 'success', msg: 'Please check your email'});
 };
 
-exports.resetPassword = (req, res) => {
-  res.json({ message: 'resetPassword endpoint' });
+exports.resetPassword = async (req, res) => {
+  const {userid, token, password, passwordConfirm} = req.body;
+
+  if (password !== passwordConfirm){
+    throw new AppError('Password is not match!', 400);
+  }
+
+  const user = User.findOne({
+    _id: userid,
+    passwordResetExpires: {$gt: Date.now()}
+  });
+
+  if(!user){
+    throw new AppError('Invalid or expired passsword reset token', 401);
+  }
+  
+  const isTokenValid = await bcrypt.compare(token, user.passwordResetToken);
+  
+  if(!isTokenValid){
+    throw new AppError('Invalid or expired passsword reset token', 401);
+  }
+  
+  await user.findByIdAndUpdate(userid,{
+    password,
+    passwordResetToken: undefined,
+    passwordResetExpires: undefined,
+  })
+
+  await new Email(user);
+
+  res.json({
+      status: 'susccess update password',
+      data: {
+        token: generateToken(user._id),
+        username: user.username,
+      },
+  });
 };

@@ -1,5 +1,5 @@
 const User = require('../models/UserModel');
-const AppError = require('../utils/AppError');
+const AppError = require('../utils/exception/AppError');
 
 exports.getUser = async (req, res) => {
   const { username } = req.params;

@@ -1,7 +1,7 @@
 const multer = require('multer');
 const sharp = require('sharp');
 const fs = require('fs');
-const AppError = require('../utils/AppError');
+const AppError = require('../utils/exception/AppError');
 
 const multerStorage = multer.memoryStorage();
 

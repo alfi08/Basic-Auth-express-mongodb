@@ -1,6 +1,6 @@
 const { verifyToken } = require('../utils/tokenManager');
 const User = require('../models/UserModel');
-const AppError = require('../utils/AppError');
+const AppError = require('../utils/exception/AppError');
 
 module.exports = async (req, res, next) => {
   let token = req.headers.authorization;
