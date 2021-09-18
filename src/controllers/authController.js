@@ -63,11 +63,11 @@ exports.forgotPassword = async (req, res) => {
     throw new AppError('Email is not registered in our data', 404);
   }
 
-  const resetToken = user.createPasswordResetToken();
+  const resetToken = await user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
 
-  // this is just dummy url for example
-  const link = `https://dummyclient.com/passwordreset?token${resetToken}&id=${user._id}`;
+  //! this is just dummy url for example
+  const link = `https://dummyclient.com/passwordreset?token=${resetToken}&id=${user._id}`;
 
   await new Email(
     user.email,
@@ -76,21 +76,31 @@ exports.forgotPassword = async (req, res) => {
     'forgotpassword'
   ).sendEmail();
 
-  res.json({ status: 'success', msg: 'Please check your email' });
+  //! data is only temporary, don't send it in production mode!!
+  res.json({
+    status: 'success',
+    msg: 'Please check your email',
+    data: {
+      token: resetToken,
+      userid: user._id,
+    },
+  });
 };
 
 exports.resetPassword = async (req, res) => {
-  const { userid, token, password, passwordConfirm } = req.body;
+  const { token } = req.params;
+  const { userid, password, passwordConfirm } = req.body;
 
   if (password !== passwordConfirm) {
     throw new AppError('Password is not match!', 400);
   }
 
-  const user = User.findOne({
+  
+  const user = await User.findOne({
     _id: userid,
     passwordResetExpires: { $gt: Date.now() },
   });
-
+  
   if (!user) {
     throw new AppError('Invalid or expired passsword reset token', 401);
   }
@@ -101,7 +111,7 @@ exports.resetPassword = async (req, res) => {
     throw new AppError('Invalid or expired passsword reset token', 401);
   }
 
-  await user.findByIdAndUpdate(userid, {
+  await User.findByIdAndUpdate(userid, {
     password,
     passwordResetToken: undefined,
     passwordResetExpires: undefined,
@@ -110,7 +120,7 @@ exports.resetPassword = async (req, res) => {
   await new Email(
     user.email,
     'Hello There, pasword already successfully',
-    { name: user.name},
+    { name: user.name },
     'resetpassword'
   ).sendEmail();
 

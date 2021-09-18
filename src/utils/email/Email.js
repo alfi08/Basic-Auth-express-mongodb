@@ -23,7 +23,7 @@ class Email {
   }
 
   async sendEmail() {
-    const sourceTemplate = fs.readFileSync(path.join(__dirname, `./template/${this.template}.handlebars`), 'utf-8');
+    const sourceTemplate = fs.readFileSync(path.join(__dirname, `./templates/${this.template}.handlebars`), 'utf-8');
     const htmlTemplate = handlebars.compile(sourceTemplate);
 
     const mailOptions = {
