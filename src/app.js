@@ -13,16 +13,17 @@ require('express-async-errors');
 
 const app = express();
 const port = process.env.PORT || 5000;
+const host = process.env.HOST || 'localhost';
 
 // set up database
 mongoose
-  .connect('mongodb://localhost/basicauthapp', {
+  .connect(process.env.DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => {
     console.log('database connected');
-    app.listen(port, () => console.log(`Server run on http://localhost:${port}/`));
+    app.listen(port, () => console.log(`Server run on http://${host}:${port}/`));
   })
   .catch((err) => console.log(err));
 
