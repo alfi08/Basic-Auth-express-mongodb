@@ -1,10 +1,14 @@
 const nodemailer = require('nodemailer');
+const handlebars = require('handlebars');
+const fs = require('fs');
+const path = require('path');
 
 class Email {
-  constructor(user){
-    this.to = user.email;
-    this.from = `Alfi Sahri`;
-    this.firstName = user.name.split(' ')[0];
+  constructor(email, subject, payload, template){
+    this.to = email;
+    this.subject = subject;
+    this.payload = payload;
+    this.template = template;
   }
 
   transporter() {
@@ -18,12 +22,15 @@ class Email {
     });
   }
 
-  async sendWelcome() {
+  async sendEmail() {
+    const sourceTemplate = fs.readFileSync(path.join(__dirname, `./template/${this.template}.handlebars`), 'utf-8');
+    const htmlTemplate = handlebars.compile(sourceTemplate);
+
     const mailOptions = {
       from: this.from,
       to: this.to,
-      subject: 'Hello There',
-      text: 'Welcome to our App, General Kenoby!',
+      subject: this.subject,
+      html: htmlTemplate(this.payload)
     };
     
     await this.transporter().sendMail(mailOptions);
