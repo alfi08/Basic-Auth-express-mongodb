@@ -6,7 +6,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const xss = require('xss-clean');
 
-const ErrorHandler = require('./utils/ErrorHandler');
+const ErrorHandler = require('./utils/exception/ErrorHandler');
 
 require('dotenv').config();
 require('express-async-errors');
